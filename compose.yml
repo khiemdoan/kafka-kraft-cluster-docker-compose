@@ -1,0 +1,262 @@
+services:
+  kafka-ui:
+    image: docker.io/provectuslabs/kafka-ui
+    restart: unless-stopped
+    container_name: kafka-ui
+    read_only: true
+    environment:
+      KAFKA_CLUSTERS_0_NAME: ${KAFKA_CLUSTER_NAME}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092,kafka-4:9092,kafka-5:9092,kafka-6:9092
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://apicurio:8080/apis/ccompat/v7
+      DYNAMIC_CONFIG_ENABLED: true
+    ports:
+      - 127.0.0.1:${KAFKA_UI_PORT}:8080/tcp
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
+      kafka-4:
+        condition: service_healthy
+      kafka-5:
+        condition: service_healthy
+      kafka-6:
+        condition: service_healthy
+      apicurio:
+        condition: service_healthy
+
+  kafka-1:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-1
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-1:9092,EXTERNAL://${KAFKA_1_IP}:${KAFKA_1_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-1:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_1_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  kafka-2:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-2
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-2:9092,EXTERNAL://${KAFKA_2_IP}:${KAFKA_2_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-2:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_2_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  kafka-3:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-3
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-3:9092,EXTERNAL://${KAFKA_3_IP}:${KAFKA_3_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-3:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_3_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  kafka-4:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-4
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 4
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-4:9092,EXTERNAL://${KAFKA_4_IP}:${KAFKA_4_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-4:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_4_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  kafka-5:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-5
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 5
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-5:9092,EXTERNAL://${KAFKA_5_IP}:${KAFKA_5_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-5:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_5_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  kafka-6:
+    image: docker.io/apache/kafka:3.8.0
+    restart: unless-stopped
+    container_name: kafka-6
+    environment:
+      KAFKA_CLUSTER_ID: ${KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 6
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: INTERNAL://:9092,EXTERNAL://:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-6:9092,EXTERNAL://${KAFKA_6_IP}:${KAFKA_6_PORT}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-2:9093
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="${KAFKA_USERNAME}" \
+        password="${KAFKA_PASSWORD}" \
+        user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+    volumes:
+      - .data/kafka-6:/tmp/kafka-logs
+    ports:
+      - ${KAFKA_6_PORT}:9094/tcp
+    healthcheck:
+      test: /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+
+  apicurio:
+    image: quay.io/apicurio/apicurio-registry:3.0.3
+    restart: unless-stopped
+    container_name: apicurio
+    ports:
+      - ${APICURIO_PORT}:8080/tcp
+    environment:
+      APICURIO_STORAGE_KIND: sql
+      APICURIO_STORAGE_SQL_KIND: postgresql
+      APICURIO_DATASOURCE_URL: jdbc:postgresql://apicurio-db:5432/${APICURIO_DB_DATABASE}
+      APICURIO_DATASOURCE_USERNAME: ${APICURIO_DB_USER}
+      APICURIO_DATASOURCE_PASSWORD: ${APICURIO_DB_PASSWORD}
+    healthcheck:
+      test: curl http://localhost:8080/apis/registry/v3
+      interval: 60s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
+    depends_on:
+      apicurio-db:
+        condition: service_healthy
+
+  apicurio-db:
+    image: docker.io/library/postgres:17.0
+    restart: unless-stopped
+    container_name: apicurio-db
+    environment:
+      POSTGRES_USER: ${APICURIO_DB_USER}
+      POSTGRES_PASSWORD: ${APICURIO_DB_PASSWORD}
+      POSTGRES_DB: ${APICURIO_DB_DATABASE}
+    volumes:
+      - .data/apicurio_db:/var/lib/postgresql/data
+    shm_size: '256MB'
+    healthcheck:
+      test: pg_isready -U ${APICURIO_DB_USER} -d ${APICURIO_DB_DATABASE}
+      interval: 60s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
+      start_interval: 1s
