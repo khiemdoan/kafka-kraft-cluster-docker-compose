@@ -1,6 +1,6 @@
 services:
   kafka-ui:
-    image: docker.io/provectuslabs/kafka-ui
+    image: ghcr.io/kafbat/kafka-ui:v1.1.0
     restart: unless-stopped
     container_name: kafka-ui
     read_only: true
@@ -220,7 +220,7 @@ services:
       start_interval: 1s
 
   apicurio:
-    image: quay.io/apicurio/apicurio-registry:3.0.3
+    image: quay.io/apicurio/apicurio-registry:3.0.6
     restart: unless-stopped
     container_name: apicurio
     ports:
@@ -243,7 +243,7 @@ services:
         condition: service_healthy
 
   apicurio-db:
-    image: docker.io/library/postgres:17.0
+    image: docker.io/library/postgres:17.2
     restart: unless-stopped
     container_name: apicurio-db
     environment:
