@@ -8,6 +8,8 @@ services:
       KAFKA_CLUSTERS_0_NAME: ${KAFKA_CLUSTER_NAME}
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092,kafka-4:9092,kafka-5:9092,kafka-6:9092
       KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://apicurio:8080/apis/ccompat/v7
+      KAFKA_CLUSTERS_0_METRICS_PORT: 9997
+      KAFKA_CLUSTERS_0_METRICS_TYPE: JMX
       DYNAMIC_CONFIG_ENABLED: true
     ports:
       - 127.0.0.1:${KAFKA_UI_PORT}:8080/tcp
@@ -47,6 +49,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-1:/tmp/kafka-logs
     ports:
@@ -79,6 +82,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-2:/tmp/kafka-logs
     ports:
@@ -111,6 +115,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-3:/tmp/kafka-logs
     ports:
@@ -143,6 +148,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-4:/tmp/kafka-logs
     ports:
@@ -154,6 +160,13 @@ services:
       retries: 3
       start_period: 1s
       start_interval: 1s
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
 
   kafka-5:
     image: docker.io/apache/kafka:3.9.0
@@ -175,6 +188,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-5:/tmp/kafka-logs
     ports:
@@ -186,6 +200,13 @@ services:
       retries: 3
       start_period: 1s
       start_interval: 1s
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
 
   kafka-6:
     image: docker.io/apache/kafka:3.9.0
@@ -207,6 +228,7 @@ services:
         username="${KAFKA_USERNAME}" \
         password="${KAFKA_PASSWORD}" \
         user_${KAFKA_USERNAME}="${KAFKA_PASSWORD}";
+      KAFKA_JMX_PORT: 9997
     volumes:
       - .data/kafka-6:/tmp/kafka-logs
     ports:
@@ -218,6 +240,13 @@ services:
       retries: 3
       start_period: 1s
       start_interval: 1s
+    depends_on:
+      kafka-1:
+        condition: service_healthy
+      kafka-2:
+        condition: service_healthy
+      kafka-3:
+        condition: service_healthy
 
   apicurio:
     image: quay.io/apicurio/apicurio-registry:3.0.6
