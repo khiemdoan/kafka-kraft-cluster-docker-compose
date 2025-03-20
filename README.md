@@ -21,7 +21,7 @@ This repository offers a straightforward setup for an Apache Kafka cluster using
 
 - Kafka Nodes:
   - 3 nodes acting as controllers
-  - 6 nodes acting as brokers (3 serve as both controllers and brokers)
+  - 4 nodes acting as brokers
 - [Apicurio Registry](https://www.apicur.io/registry/): For schema and metadata management
 - Postgres: Used by Apicurio
 - [Kafka UI](https://github.com/provectus/kafka-ui): A web-based interface for managing Kafka
