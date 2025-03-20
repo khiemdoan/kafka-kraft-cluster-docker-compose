@@ -30,7 +30,7 @@ services:
         condition: service_healthy
 
   kafka-1:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-1
     environment:
@@ -63,7 +63,7 @@ services:
       start_interval: 1s
 
   kafka-2:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-2
     environment:
@@ -96,7 +96,7 @@ services:
       start_interval: 1s
 
   kafka-3:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-3
     environment:
@@ -129,7 +129,7 @@ services:
       start_interval: 1s
 
   kafka-4:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-4
     environment:
@@ -169,7 +169,7 @@ services:
         condition: service_healthy
 
   kafka-5:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-5
     environment:
@@ -209,7 +209,7 @@ services:
         condition: service_healthy
 
   kafka-6:
-    image: docker.io/apache/kafka:3.9.0
+    image: docker.io/apache/kafka:4.0.0
     restart: unless-stopped
     container_name: kafka-6
     environment:
@@ -272,7 +272,7 @@ services:
         condition: service_healthy
 
   apicurio-db:
-    image: docker.io/library/postgres:17.2
+    image: docker.io/library/postgres:17.4
     restart: unless-stopped
     container_name: apicurio-db
     environment:
