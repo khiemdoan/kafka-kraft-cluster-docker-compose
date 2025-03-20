@@ -26,3 +26,6 @@ sudo chown 1000:1000 -R .data/kafka-5
 
 mkdir -p .data/kafka-6
 sudo chown 1000:1000 -R .data/kafka-6
+
+mkdir -p .data/kafka-7
+sudo chown 1000:1000 -R .data/kafka-7
