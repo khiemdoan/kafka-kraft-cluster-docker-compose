@@ -19,9 +19,9 @@ This repository offers a straightforward setup for an Apache Kafka cluster using
 
 ## Components
 
-- Kafka Nodes:
+- [Kafka](https://kafka.apache.org/) Nodes:
   - 3 nodes acting as controllers
   - 4 nodes acting as brokers
 - [Apicurio Registry](https://www.apicur.io/registry/): For schema and metadata management
-- Postgres: Used by Apicurio
-- [Kafka UI](https://github.com/provectus/kafka-ui): A web-based interface for managing Kafka
+- [Postgres](https://www.postgresql.org/): Used by Apicurio
+- [Kafbat UI](https://kafbat.io/): A web-based interface for managing Kafka
