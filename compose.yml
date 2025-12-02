@@ -1,5 +1,5 @@
 x-controller-common: &kafka-controller-common
-  image: docker.io/apache/kafka:4.1.0
+  image: docker.io/apache/kafka:4.1.1
   restart: unless-stopped
   healthcheck:
       test: /opt/kafka/bin/kafka-cluster.sh list-endpoints --bootstrap-controller localhost:9093
@@ -10,7 +10,7 @@ x-controller-common: &kafka-controller-common
       start_interval: 1s
 
 x-broker-common: &kafka-broker-common
-  image: docker.io/apache/kafka:4.1.0
+  image: docker.io/apache/kafka:4.1.1
   restart: unless-stopped
   depends_on:
     controller-1:
@@ -29,7 +29,7 @@ x-broker-common: &kafka-broker-common
 
 services:
   kafka-ui:
-    image: ghcr.io/kafbat/kafka-ui:v1.3.0
+    image: ghcr.io/kafbat/kafka-ui:v1.4.2
     restart: unless-stopped
     container_name: kafka-ui
     read_only: true
@@ -201,7 +201,7 @@ services:
 
 
   apicurio:
-    image: quay.io/apicurio/apicurio-registry:3.0.14
+    image: quay.io/apicurio/apicurio-registry:3.1.4
     restart: unless-stopped
     container_name: apicurio
     ports:
@@ -224,7 +224,7 @@ services:
         condition: service_healthy
 
   apicurio-db:
-    image: docker.io/library/postgres:17.6
+    image: docker.io/library/postgres:18.1
     restart: unless-stopped
     container_name: apicurio-db
     environment:
@@ -232,7 +232,7 @@ services:
       POSTGRES_PASSWORD: ${APICURIO_DB_PASSWORD}
       POSTGRES_DB: ${APICURIO_DB_DATABASE}
     volumes:
-      - .data/apicurio_db:/var/lib/postgresql/data
+      - .data/apicurio_db:/var/lib/postgresql/18/docker
     shm_size: '256MB'
     healthcheck:
       test: pg_isready -U ${APICURIO_DB_USER} -d ${APICURIO_DB_DATABASE}
