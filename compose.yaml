@@ -1,3 +1,5 @@
+---
+
 x-controller-common: &kafka-controller-common
   image: docker.io/apache/kafka:4.1.1
   restart: unless-stopped
@@ -52,6 +54,28 @@ services:
       broker-4:
         condition: service_healthy
       apicurio:
+        condition: service_healthy
+
+  kafka-exporter:
+    image: docker.io/danielqsj/kafka-exporter
+    restart: unless-stopped
+    container_name: kafka-exporter
+    read_only: true
+    command:
+      --kafka.server=broker-1:9092
+      --kafka.server=broker-2:9092
+      --kafka.server=broker-3:9092
+      --kafka.server=broker-4:9092
+    ports:
+      - 9308:9308/tcp
+    depends_on:
+      broker-1:
+        condition: service_healthy
+      broker-2:
+        condition: service_healthy
+      broker-3:
+        condition: service_healthy
+      broker-4:
         condition: service_healthy
 
   controller-1:
@@ -198,7 +222,6 @@ services:
       - .data/broker-4:/tmp/kafka-logs
     ports:
       - ${KAFKA_BROKER_4_PORT}:9094/tcp
-
 
   apicurio:
     image: quay.io/apicurio/apicurio-registry:3.1.4
