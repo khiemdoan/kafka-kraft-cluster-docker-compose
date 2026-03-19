@@ -1,7 +1,7 @@
 ---
 
 x-controller-common: &kafka-controller-common
-  image: docker.io/apache/kafka:4.1.1
+  image: docker.io/apache/kafka:4.2.0
   restart: unless-stopped
   healthcheck:
       test: /opt/kafka/bin/kafka-cluster.sh list-endpoints --bootstrap-controller localhost:9093
@@ -12,7 +12,7 @@ x-controller-common: &kafka-controller-common
       start_interval: 1s
 
 x-broker-common: &kafka-broker-common
-  image: docker.io/apache/kafka:4.1.1
+  image: docker.io/apache/kafka:4.2.0
   restart: unless-stopped
   depends_on:
     controller-1:
@@ -224,7 +224,7 @@ services:
       - ${KAFKA_BROKER_4_PORT}:9094/tcp
 
   apicurio:
-    image: quay.io/apicurio/apicurio-registry:3.1.4
+    image: quay.io/apicurio/apicurio-registry:3.2.0
     restart: unless-stopped
     container_name: apicurio
     ports:
@@ -247,7 +247,7 @@ services:
         condition: service_healthy
 
   apicurio-db:
-    image: docker.io/library/postgres:18.1
+    image: docker.io/library/postgres:18.3
     restart: unless-stopped
     container_name: apicurio-db
     environment:
